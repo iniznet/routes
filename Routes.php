@@ -34,12 +34,16 @@ class Routes
 
             unset($upstatement_routes->router);
 
-            /**
-             * Fires when a route is matched and decide to continue or throw an error|response
-             */
-            do_action('routes', $route);
-
             if ($route && isset($route['target'])) {
+                define('ROUTES_MATCHED', true);
+
+                /**
+                 * Fires when a route is matched and decide to continue or throw an error|response
+                 */
+                do_action('routes', $route);
+
+                $_POST = empty($_POST) ? json_decode(file_get_contents('php://input'), true) : $_POST;
+		 
                 if (isset($route['params'])) {
                     call_user_func($route['target'], $route['params']);
                 } else {
